@@ -3,12 +3,9 @@
 Fabric script to distribute an archive to web servers.
 """
 
-from fabric.api import env, local, put, run
-from datetime import datetime
-import os
-env.hosts = ['<IP web-01>', '<IP web-02>']
-env.user = 'ubuntu'
-env.key_filename = '~/.ssh/id_rsa'
+from fabric.api import put, run, env
+from os.path import exists
+env.hosts = ['54.89.109.87', '100.25.190.21']
 
 
 def do_deploy(archive_path):
@@ -17,11 +14,16 @@ def do_deploy(archive_path):
 
     - Returns False if the file at archive_path doesn't exist.
     - Uploads the archive to the /tmp/ directory of the web server.
-    - Uncompresses the archive to the folder /data/web_static/releases/<archive filename without extension> on the web server.
+    - Uncompresses the archive to the folder
+    /data/web_static/releases/<archive filename
+    without extension> on the web server.
     - Deletes the archive from the web server.
-    - Deletes the symbolic link /data/web_static/current from the web server.
-    - Creates a new symbolic link /data/web_static/current on the web server, linked to the new version of the code.
-    - Returns True if all operations have been done correctly, otherwise returns False.
+    - Deletes the symbolic link /data/web_static
+    /current from the web server.
+    - Creates a new symbolic link /data/web_static/
+    current on the web server, linked to the new version of the code.
+    - Returns True if all operations have
+    been done correctly, otherwise returns False.
     """
     if not os.path.exists(archive_path):
         return False
